@@ -136,6 +136,8 @@ namespace ScreenVoice
         public ReactiveProperty<double> Pitch { get; } = new ReactiveProperty<double>(1);
         public ReactiveProperty<double> Intonation { get; } = new ReactiveProperty<double>(1);
 
+        public ReactiveProperty<bool> Reading { get; } = new ReactiveProperty<bool>(true);
+
         public ReactiveProperty<int> RefreshRate { get; } = new ReactiveProperty<int>(1000);
 
         public App1.MyUserControl1 util;
@@ -203,6 +205,10 @@ namespace ScreenVoice
 
             ScriptReslut.Where(result => result != null).Where(result => !string.IsNullOrWhiteSpace(result.Text)).Where(result => result.IsRead).Select(result => result.Text).Distinct().Subscribe(async text =>
                     {
+                        if (!Reading.Value)
+                        {
+                            return;
+                        }
                         var json = System.Text.Json.JsonSerializer.Serialize(new VoiceloidParam
                         {
                             Effects = new VoiceloidEffects

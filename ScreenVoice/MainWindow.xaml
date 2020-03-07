@@ -27,13 +27,14 @@
         <xamlhost:WindowsXamlHost InitialTypeName="App1.MyUserControl1"  ChildChanged="WindowsXamlHost_ChildChanged" Grid.Column="4" />
 
         <ToolBar Grid.ColumnSpan="5" >
-            <ComboBox  ItemsSource="{Binding Windows}" DisplayMemberPath="Title" SelectedItem="{Binding SelectedWindow.Value, Mode=TwoWay, UpdateSourceTrigger=Default}" MinWidth="200" />
+            <ComboBox  ItemsSource="{Binding Windows}" DisplayMemberPath="Title" SelectedItem="{Binding SelectedWindow.Value, Mode=TwoWay, UpdateSourceTrigger=Default}" Width="200" />
             <Button Content="Capture Start" Command="{Binding StartCapture, Mode=OneWay}" />
             <Button Content="Refresh Window" Command="{Binding RefreshWindow, Mode=OneWay}" />
             <Button Content="Add Clip" Command="{Binding AddClip, Mode=OneWay}" />
             <Button Content="Remove Clip" Command="{Binding RemoveClip, Mode=OneWay}" CommandParameter="{Binding SelectedClipImage.Value}" />
+            <ToggleButton Content="Reading" IsChecked="{Binding Reading.Value}" />
         </ToolBar>
-        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Grid.RowSpan="3"/>
+        <GridSplitter Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" Grid.RowSpan="3"/>
         <ListBox Grid.Row="1" Grid.RowSpan="3" ItemsSource="{Binding ClipImages, Mode=OneWay}" SelectedItem="{Binding SelectedClipImage.Value}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
@@ -62,9 +63,9 @@
             </ToolBar>
             <Image  Grid.Row="1" Source="{Binding SelectedClipImage.Value.Bitmap.Value}" />
             <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  />
-            <TextBox Grid.Row="3" Text="{Binding SelectedClipImage.Value.Text.Value, Mode=OneWay}" />
+            <TextBox Grid.Row="3" Text="{Binding SelectedClipImage.Value.Text.Value, Mode=OneWay}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
         </Grid>
-        <TextBox Grid.Column="4"  Grid.Row="1" Text="{Binding Script.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" />
+        <TextBox Grid.Column="4"  Grid.Row="1" Text="{Binding Script.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" />
         <Viewbox Grid.Column="2" Grid.Row="1">
             <Grid Width="{Binding BitmapWidth.Value, Mode=OneWay}" Height="{Binding BitmapHeight.Value, Mode=OneWay}">
                 <Image   Source="{Binding Bitmap.Value, Mode=OneWay}"/>

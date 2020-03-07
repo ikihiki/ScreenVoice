@@ -211,7 +211,6 @@ namespace App1
                 {
                     ds.Clear(Colors.Black);
                     ds.DrawImage(canvasBitmap);
-                    ds.DrawRectangle(100, 200, 5, 6, Colors.Red);
                 }
                 foreach (var clip in ClipImages.Values)
                 {
