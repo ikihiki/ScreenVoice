@@ -1,0 +1,146 @@
+﻿<Window x:Class="ScreenVoice.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
+        xmlns:local="clr-namespace:ScreenVoice" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="599" Width="1083">
+    <Window.DataContext>
+        <local:MainWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*" MinWidth="150"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="389*"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="313*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="183*"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="213*"/>
+        </Grid.RowDefinitions>
+        <xamlhost:WindowsXamlHost InitialTypeName="App1.MyUserControl1"  ChildChanged="WindowsXamlHost_ChildChanged" Grid.Column="4" />
+
+        <ToolBar Grid.ColumnSpan="5" >
+            <ComboBox  ItemsSource="{Binding Windows}" DisplayMemberPath="Title" SelectedItem="{Binding SelectedWindow.Value, Mode=TwoWay, UpdateSourceTrigger=Default}" MinWidth="200" />
+            <Button Content="Capture Start" Command="{Binding StartCapture, Mode=OneWay}" />
+            <Button Content="Refresh Window" Command="{Binding RefreshWindow, Mode=OneWay}" />
+            <Button Content="Add Clip" Command="{Binding AddClip, Mode=OneWay}" />
+            <Button Content="Remove Clip" Command="{Binding RemoveClip, Mode=OneWay}" CommandParameter="{Binding SelectedClipImage.Value}" />
+        </ToolBar>
+        <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Grid.RowSpan="3"/>
+        <ListBox Grid.Row="1" Grid.RowSpan="3" ItemsSource="{Binding ClipImages, Mode=OneWay}" SelectedItem="{Binding SelectedClipImage.Value}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <local:ClipImageListItem MaxHeight="100" MaxWidth="200" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <GridSplitter  Grid.Column="3" Grid.Row="1" HorizontalAlignment="Stretch" Grid.RowSpan="3" />
+        <GridSplitter  Grid.Column="2"   Grid.Row="2" HorizontalAlignment="Stretch" Grid.ColumnSpan="3"   />
+        <Grid Grid.Column="2" Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ToolBar>
+                <Label Content="X:"/>
+                <xctk:IntegerUpDown  Minimum="0" MinWidth="100" Value="{Binding SelectedClipImage.Value.X.Value}" />
+                <Label Content="Y:"/>
+                <xctk:IntegerUpDown  Minimum="0" MinWidth="100" Value="{Binding SelectedClipImage.Value.Y.Value}"/>
+                <Label Content="Width:"/>
+                <xctk:IntegerUpDown  Minimum="20" MinWidth="100" Value="{Binding SelectedClipImage.Value.Width.Value}"/>
+                <Label Content="Height:"/>
+                <xctk:IntegerUpDown  Minimum="20" MinWidth="100" Value="{Binding SelectedClipImage.Value.Height.Value}"/>
+            </ToolBar>
+            <Image  Grid.Row="1" Source="{Binding SelectedClipImage.Value.Bitmap.Value}" />
+            <GridSplitter Grid.Row="2" HorizontalAlignment="Stretch"  />
+            <TextBox Grid.Row="3" Text="{Binding SelectedClipImage.Value.Text.Value, Mode=OneWay}" />
+        </Grid>
+        <TextBox Grid.Column="4"  Grid.Row="1" Text="{Binding Script.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" />
+        <Viewbox Grid.Column="2" Grid.Row="1">
+            <Grid Width="{Binding BitmapWidth.Value, Mode=OneWay}" Height="{Binding BitmapHeight.Value, Mode=OneWay}">
+                <Image   Source="{Binding Bitmap.Value, Mode=OneWay}"/>
+                <ItemsControl ItemsSource="{Binding ClipImages, Mode=OneWay}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Rectangle Stroke="Red" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding Width.Value}" Height="{Binding Height.Value}"  />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemContainerStyle>
+                        <Style>
+                            <Setter Property="Canvas.Top" Value="{Binding Path=Y.Value}" />
+                            <Setter Property="Canvas.Left" Value="{Binding Path=X.Value}" />
+                        </Style>
+                    </ItemsControl.ItemContainerStyle>
+                </ItemsControl>
+            </Grid>
+        </Viewbox>
+
+        <Grid Grid.Column="4" Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="5"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBox Text="{Binding ScriptReslut.Value.Text}"/>
+            <GridSplitter  Grid.Column="2"   Grid.Row="1" HorizontalAlignment="Stretch"   />
+            <StackPanel Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="音量" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Grid.Column="2" Maximum="2"  Minimum="0" Increment="0.5" Value="{Binding Volume.Value}"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="話速" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Grid.Column="2" Maximum="4" Minimum="0.5" Increment="0.5" Value="{Binding Speed.Value}"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="高さ" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Grid.Column="2" Minimum="0.5" Maximum="2" Increment="0.5" Value="{Binding Pitch.Value}" />
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="抑揚" VerticalAlignment="Center" />
+                    <xctk:DoubleUpDown Grid.Column="2" Minimum="0.5" Maximum="2" Increment="0.5" Value="{Binding Intonation.Value}" />
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="リフレッシュレート(ms)" VerticalAlignment="Center" />
+                    <xctk:IntegerUpDown Grid.Column="2" Minimum="50" Maximum="20000" Increment="100" Value="{Binding RefreshRate.Value}" />
+                </Grid>
+            </StackPanel>
+        </Grid>
+
+
+    </Grid>
+</Window>
